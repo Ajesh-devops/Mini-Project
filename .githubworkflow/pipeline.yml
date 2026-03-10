@@ -5,12 +5,11 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
 
+  build:
     runs-on: ubuntu-latest
 
     steps:
-
     - name: Checkout code
       uses: actions/checkout@v4
 
@@ -21,7 +20,25 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t ajeshdevops/devops-monitoring-app .
+      run: docker build -t ajeshdevops/devops-monitoring-app:latest .
 
     - name: Push Image
-      run: docker push ajeshdevops/devops-monitoring-app
+      run: docker push ajeshdevops/devops-monitoring-app:latest
+
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Deploy to EC2
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.EC2_HOST }}
+        username: ubuntu
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker pull ajeshdevops/devops-monitoring-app:latest
+          docker stop monitoring-app || true
+          docker rm monitoring-app || true
+          docker run -d -p 3000:3000 --name monitoring-app ajeshdevops/devops-monitoring-app:latest
