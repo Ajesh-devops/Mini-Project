@@ -21,7 +21,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Build Docker Image
-      run: docker build -t yourdockerhub/devops-monitoring-app .
+      run: docker build -t ajeshdevops/devops-monitoring-app .
 
     - name: Push Image
-      run: docker push yourdockerhub/devops-monitoring-app
+      run: docker push ajeshdevops/devops-monitoring-app

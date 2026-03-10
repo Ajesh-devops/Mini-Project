@@ -14,6 +14,6 @@ spec:
     spec:
       containers:
       - name: monitoring-app
-        image: yourdockerhub/devops-monitoring-app:latest
+        image: ajeshdevops/devops-monitoring-app:latest
         ports:
         - containerPort: 3000
